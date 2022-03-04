@@ -167,6 +167,9 @@ namespace BasicServerHTTPlistener
                             break;
 
                         //Answer to question 2 
+                        /**
+                          * Tester la fonction avec  http://localhost:8080/exercice1/substract?param1=5&param2=1
+                          */
                         case "exercie2/":
 
                             ProcessStartInfo start = new ProcessStartInfo();
