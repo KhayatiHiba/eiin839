@@ -1,7 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.IO;
 using System.Net;
+using System.Reflection;
 using System.Text;
 using System.Web;
 
@@ -18,8 +20,7 @@ namespace BasicServerHTTPlistener
                 Console.WriteLine("A more recent Windows version is required to use the HttpListener class.");
                 return;
             }
- 
- 
+
             // Create a listener.
             HttpListener listener = new HttpListener();
 
@@ -102,6 +103,15 @@ namespace BasicServerHTTPlistener
                 Console.WriteLine("param3 = " + HttpUtility.ParseQueryString(request.Url.Query).Get("param3"));
                 Console.WriteLine("param4 = " + HttpUtility.ParseQueryString(request.Url.Query).Get("param4"));
 
+                //Paramteres 
+                String[] parameters =
+                {
+                    HttpUtility.ParseQueryString(request.Url.Query).Get("param1"),
+                    HttpUtility.ParseQueryString(request.Url.Query).Get("param2"),
+                    HttpUtility.ParseQueryString(request.Url.Query).Get("param3"),
+                    HttpUtility.ParseQueryString(request.Url.Query).Get("param4")
+                };
+
                 //
                 Console.WriteLine(documentContents);
 
@@ -109,7 +119,119 @@ namespace BasicServerHTTPlistener
                 HttpListenerResponse response = context.Response;
 
                 // Construct a response.
-                string responseString = "<HTML><BODY> Hello world!</BODY></HTML>";
+                String responseString = "";
+
+                //Obtain the adress of the local host and the exercice question wanted.
+                if (request.Url.Segments.Length >= 2)
+                {
+                    switch(request.Url.Segments[1])
+                    {
+       
+                        //Answer to question 1
+                        case "exercice1/":
+                       
+                            String htmlResponse = "";
+
+                            //Obtain the name of the method and the two parameters
+                            if (request.Url.Segments.Length >= 3)
+                            {
+
+                                Type methodsType = typeof(MyMethods);
+
+                                //Obtain the method's name
+                                MethodInfo method = methodsType.GetMethod(request.Url.Segments[2]);
+
+                                if (method == null)
+                                {
+                                    htmlResponse = "Method passed in parameters is undefined";
+                                }
+                                else
+                                {
+                                    try
+                                    {
+                                        String result = (string)methodsType.GetMethod(request.Url.Segments[2]).Invoke(null, new object[] { parameters[0], parameters[1] });
+                                        htmlResponse = $"The result is {result}";
+                                    }
+                                    catch (TargetInvocationException)
+                                    {
+                                        htmlResponse = "Format error";
+                                    }
+                                }
+
+                            }
+                            else
+                            {
+                                htmlResponse = "3 parameters should be given";
+                            }
+                            responseString = $"<!DOCTYPE html><html><body>{htmlResponse}</body></html>";
+                            break;
+
+                        //Answer to question 2 
+                        case "exercie2/":
+
+                            ProcessStartInfo start = new ProcessStartInfo();
+                            start.FileName = "python";
+                            start.Arguments = $"substract.py";
+
+                            if (request.Url.Segments.Length > 2)
+                            {
+                                start.Arguments += $"{request.Url.Segments[2]} ";
+                            }
+
+                            foreach (string param in parameters)
+                            {
+                                start.Arguments += ((param == null || param.Equals("")) ? "undefined " : param + " ");
+                            }
+
+                            Console.Write("Program arguments: " + start.Arguments);
+
+                            start.UseShellExecute = false;
+                            start.RedirectStandardOutput = true;
+
+                            using (Process process = Process.Start(start))
+                            {
+                                using (StreamReader reader = process.StandardOutput)
+                                {
+                                    string _result = reader.ReadToEnd();
+                                    responseString = _result;
+                                }
+                            }
+                            break;
+
+                        case "exercice3/":
+                            Type methodsType = typeof(MyMethods);
+                            MethodInfo method = methodsType.GetMethod(request.Url.Segments[2]);
+                            string result = "";
+
+                            if (method == null)
+                            {
+                                result = "Bad method";
+                            }
+                            else
+                            {
+                                try
+                                {
+                                    result = (string)methodsType.GetMethod(request.Url.Segments[2]).Invoke(null, new object[] { parameters[0] });
+                                }
+                                catch (TargetInvocationException)
+                                {
+                                    result = "Error";
+                                }
+                            }
+
+                            responseString = "{\"result\": \"" + result + "\"}";
+                            break;
+
+                        //Default answer
+                        default:
+                            responseString = $"TIMEOUT";
+                            break;
+
+
+                    }
+
+                }
+
                 byte[] buffer = System.Text.Encoding.UTF8.GetBytes(responseString);
                 // Get a response stream and write the response to it.
                 response.ContentLength64 = buffer.Length;
@@ -122,4 +244,18 @@ namespace BasicServerHTTPlistener
             // listener.Stop();
         }
     }
+
+    internal class MyMethods
+    {
+        /**
+         * Tester la fonction http://localhost:8080/exercice1/add?param1=5&param2=1
+         */
+        public static String add(String param1, String param2)
+        {
+            int num1 = Int32.Parse(param1);
+            int num2 = Int32.Parse(param2);
+            return (num1 + num2).ToString();
+        }
+    }
+
 }
