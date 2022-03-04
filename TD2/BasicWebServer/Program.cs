@@ -136,12 +136,12 @@ namespace BasicServerHTTPlistener
                             if (request.Url.Segments.Length >= 3)
                             {
 
-                                Type methodsType = typeof(MyMethods);
+                                Type methodType = typeof(MyMethods);
 
                                 //Obtain the method's name
-                                MethodInfo method = methodsType.GetMethod(request.Url.Segments[2]);
+                                MethodInfo method1 = methodType.GetMethod(request.Url.Segments[2]);
 
-                                if (method == null)
+                                if (method1 == null)
                                 {
                                     htmlResponse = "Method passed in parameters is undefined";
                                 }
@@ -149,8 +149,8 @@ namespace BasicServerHTTPlistener
                                 {
                                     try
                                     {
-                                        String result = (string)methodsType.GetMethod(request.Url.Segments[2]).Invoke(null, new object[] { parameters[0], parameters[1] });
-                                        htmlResponse = $"The result is {result}";
+                                        String result1 = (string)methodType.GetMethod(request.Url.Segments[2]).Invoke(null, new object[] { parameters[0], parameters[1] });
+                                        htmlResponse = $"The result is {result1}";
                                     }
                                     catch (TargetInvocationException)
                                     {
@@ -168,13 +168,13 @@ namespace BasicServerHTTPlistener
 
                         //Answer to question 2 
                         /**
-                          * Tester la fonction avec  http://localhost:8080/exercice1/substract?param1=5&param2=1
-                          */
-                        case "exercie2/":
+                        * Tester la fonction http://localhost:8080/exercice2/substract/substract?param1=5&param2=1
+                        */
+                        case "exercice2/":
 
                             ProcessStartInfo start = new ProcessStartInfo();
                             start.FileName = "python";
-                            start.Arguments = $"substract.py";
+                            start.Arguments = $"substract.py ";
 
                             if (request.Url.Segments.Length > 2)
                             {
