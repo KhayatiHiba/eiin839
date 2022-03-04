@@ -36,6 +36,7 @@ namespace Echo
 
     public class handleClient
     {
+        static string HTTP_ROOT = @"D:\Documents\Study\02- Second Year\PS8\SOC\TDS\eiin839\TD1\Echo\www\pub";
         TcpClient clientSocket;
         public void startClient(TcpClient inClientSocket)
         {
@@ -44,20 +45,35 @@ namespace Echo
             ctThread.Start();
         }
 
-
-
         private void Echo()
         {
             NetworkStream stream = clientSocket.GetStream();
             BinaryReader reader = new BinaryReader(stream);
             BinaryWriter writer = new BinaryWriter(stream);
 
+            string header = "HTTP/1.0 200 OK";
+            string file = File.ReadAllText(HTTP_ROOT + "\\index.html");
+
             while (true)
             {
+                string response = "";
 
+                //Reads what was written on the client console.
                 string str = reader.ReadString();
-                Console.WriteLine(str);
-                writer.Write(str);
+
+                if (str.Equals("GET /index.html"))
+                {
+                    //Writes the information on the console.
+                    Console.WriteLine("index.html retrieved!");
+                    writer.Write(header + "\n" + file);
+                }
+                else
+                {
+                    //Writes the a bad request message on the console.
+                    response = "403 Bad Request";
+                    Console.WriteLine("Response :\n" + response);
+                    writer.Write(response);
+                }
             }
         }
 

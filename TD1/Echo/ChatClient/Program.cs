@@ -29,8 +29,11 @@ namespace Echo
 
             while (true)
             {
+
                 string str = "response: ";
+                //Reads what was written in the client executable.
                 str = str + reader.ReadString();
+                //Writes it on the console.
                 Console.WriteLine(str);
             }
 
