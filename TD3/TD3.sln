@@ -3,7 +3,9 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
 VisualStudioVersion = 17.1.32210.238
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TD3", "TD3\TD3.csproj", "{66980E6C-DCF3-40B3-9BFE-E2C013190F4C}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "TD3", "TD3\TD3.csproj", "{66980E6C-DCF3-40B3-9BFE-E2C013190F4C}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Soap", "Soap\Soap.csproj", "{BB8E9611-B2FB-4B87-90E0-33DBFAB37B5A}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -15,6 +17,10 @@ Global
 		{66980E6C-DCF3-40B3-9BFE-E2C013190F4C}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{66980E6C-DCF3-40B3-9BFE-E2C013190F4C}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{66980E6C-DCF3-40B3-9BFE-E2C013190F4C}.Release|Any CPU.Build.0 = Release|Any CPU
+		{BB8E9611-B2FB-4B87-90E0-33DBFAB37B5A}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{BB8E9611-B2FB-4B87-90E0-33DBFAB37B5A}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{BB8E9611-B2FB-4B87-90E0-33DBFAB37B5A}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{BB8E9611-B2FB-4B87-90E0-33DBFAB37B5A}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
